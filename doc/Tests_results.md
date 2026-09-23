@@ -1,12 +1,12 @@
 *****************************************************************************
-0. Contents of this file
+# 0. Contents of this file
 *****************************************************************************
-0. Contents of this file
-1. Summary of test results
-2. Test Configurations & Usage
-3. Full results
-4. Details of the results format
-5. Tests that were not included
+# 0. Contents of this file
+# 1. Summary of test results
+# 2. Test Configurations & Usage
+# 3. Full results
+# 4. Details of the results format
+# 5. Tests that were not included
 
 This is about how I test the tests themselves.  I have used this methodology 
 for both individual tests and entire batteries of test.  Basically, I have a 
@@ -32,7 +32,7 @@ lot more if you count those that pass BigCrush but fail Crush, which is
 surprisingly common).  
 
 *****************************************************************************
-1. Summary of results
+# 1. Summary of results
 *****************************************************************************
 
 The brief summary is this: by the metrics I'm using, from best to worst, the test 
@@ -113,20 +113,20 @@ indirection-based PRNGs	    10 secs  1 min    5 mins   30 mins  1 hour   4 hours
 
 
 *****************************************************************************
-2. Test Configurations & Usage
+# 2. Test Configurations & Usage
 *****************************************************************************
-
+### 
 PractRand std:
 	The software this document accompanies.  
 	configuration / usage:
 		The defeault settings on PractRand - core tests with standard folding.  
 		Used in single-threaded mode (also the default setting).  
-	speed:
+### 	speed:
 		On my computer, this tests about 256 gigabytes per hour on fast PRNGs.  
 		Time used is mostly linear with amount of data tested... 
 			not counting the time taken to generate interim results, 
 			which is usually between 0 and 2 seconds per set of results shown.  
-	strengths:
+### 	strengths:
 		Exceptionally effective against a wide variety of types of PRNGs.  
 		Uses the least CPU time per biased PRNG found.  
 		No (realistic) maximum test length.  
@@ -137,13 +137,13 @@ PractRand std:
 			Of course, to some extent that's a function of which PRNGs are tested
 			which I picked out
 		The only test suite to offer interim results.  
-	weaknesses:
+### 	weaknesses:
 		Cheats slightly on all RNGs by looking at the metadata - 
 			it treats 8 bit RNGs slightly differently than 32 bit RNGs, etc
 		Tests are not completely independent.  
 		Requires lots of random numbers.  
 			if the PRNG being tested is very slow, this could be a problem
-	record notation:
+### 	record notation:
 		Test failures are recorded as the smallest data size at which failure was detected.  
 			only sizes that are powers of 2 are tested, starting from 1 kilobyte
 		If no failures were found, instead the result is recorded as > X
@@ -151,13 +151,13 @@ PractRand std:
 		Failing is anything that PractRand explicitly evaluates as FAIL.  
 			Anything short of that is considered passing.  
 	link: https://pracrand.sourceforge.net/
-
+### 
 gjrand pmcp:
 	Quite obscure, but actually really good.  
 	configuration / usage:
 		I use pmcp (I think that stands for Parallel Master Control Program?)
 			I think mcp is equivalent, but doesn't share PRNG output between tests so it's slower.  
-		with the command line option for one of its standard sizes:
+### 		with the command line option for one of its standard sizes:
 			--small, --standard, --big, --huge, --tera, or --ten-tera
 		It also supports --tiny, but that's not much faster than --small so I don't bother with it.  
 		WARNING: only run one instance of pmcp at once.  Otherwise it can SILENTLY FAIL.  
@@ -166,7 +166,7 @@ gjrand pmcp:
 		I'm using gjrand version 4.2.1.  
 			There also exists a version 4.3.0, but I rejected it in favor of 4.2.1
 			Why?  ...I don't remember.  Might have been important, or maybe it was trivial.  
-	speed:
+### 	speed:
 		On my computer, --small takes about 10 seconds when using a single core
 			--standard takes about a minute
 			--big takes about 5 minutes
@@ -174,7 +174,7 @@ gjrand pmcp:
 			--tera takes about 8 hours
 			--ten-tera takes about 4 days
 		There's also --tiny, which takes about 3.5 seconds, but I don't use that one much.  
-	strengths:
+### 	strengths:
 		Highly effective against a wide variety of types of PRNGs.  
 		Second best overall results by the metrics these charts focus on, after PractRand.  
 		Can useful summarize results with a small number of p-values.  
@@ -182,12 +182,12 @@ gjrand pmcp:
 			In other batteries a single test algorithm rejecting a PRNG might produce anywhere from 1 to 1000 failing p-values (and thus that many reported failures), depending upon how that test was structured.
 			With gjrand, every testing algorithm produces exactly 1 p-value, and gets reported as exactly 1 failure.  Thus the maximum possible number of failures is only about 13.  
 		Decent command line interface aside from the problems mentioned earlier.  
-	weaknesses:
+### 	weaknesses:
 		See the all-caps warnings in the configuration/usage section?  Those matter.  
 			Especially the first one.  It's incredibly painful if you have a large archive of test results, and then you realize that some of them are garbage but you can't even reliably tell which ones, and it will take months to rerun all your tests...  
 			Even aside from the problems with garbage output, lack of being able to run multiple instances at once can be a problem for some users.  Like me.  
 		I haven't dared to even try to build this on windows.  I doubt it would go well.  
-	record notation:
+### 	record notation:
 		The results are recorded as a sequence of up to 6 characters.  
 			The first character represents the result of pmcp --small, then --standard, --big, --huge, --tera, and --ten-tera, in order.  
 			If no failures were detected, that is recorded as dash character (-) or a tilde character (~)
@@ -206,10 +206,10 @@ TestU01 *Crush:
 	configuration / usage:
 		Just the normal behavior of SmallCrush/Crush/BigCrush.  
 		The only thing I've meaningfully adjusted is interface.  
-	speed:
+### 	speed:
 		On my computer, SmallCrush takes maybe 10 seconds on very fast PRNGs.  
 		Crush, about half an hour, and BigCrush takes maybe 4 hours.  
-	strengths:
+### 	strengths:
 		Can be linked with and used as a C++ library.  
 		Good academic credentials behind this.  
 			And it shows - you can read the paper this was published with, for instance.  
@@ -217,7 +217,7 @@ TestU01 *Crush:
 		Third best overall results by the metrics these charts focus on, after PractRand and gjrand.  
 		Guarantees that all subtest results are independant.  
 		Decent output summary format.  
-	weaknesses:
+### 	weaknesses:
 		It actually does not test the lowest bit of PRNG output.  
 			Which is ridiculous.  It got them some advantages, but... it's still ridiculous.
 		I had to write my own scriptable interface (testing piped input etc).  
@@ -227,7 +227,7 @@ TestU01 *Crush:
 		Doesn't support multithreading.  
 		Contrary to what you might expect, it's common for a PRNG to fail Crush yet pass BigCrush.  
 			So, you should never test with *only* BigCrush.  
-	record notation:
+### 	record notation:
 		If no failures were found the result is recorded as pass if there were no suspicious results, 
 			or ~pass if there were suspicious results.  
 		Otherwise, results are recorded as X/Y/Z
@@ -238,7 +238,7 @@ TestU01 *Crush:
 		Any p-value less than 1e-9 or greater than (1-1e-9) is considered a failure.  
 		Any non-failing p-value less than 1e-4 or greater than (1-1e-4) is considered suspicious.  
 	link: https://simul.iro.umontreal.ca/testu01/tu01.html
-
+### 
 RaBiGeTe:
 	I'm now using version 2.0 of this.  
 	configuration / usage:
@@ -256,19 +256,19 @@ RaBiGeTe:
 		I test only one sample.  I then sort the p-values for that sample.  If any p-value is "fail" or less than 1e-10, that is counted as a failure.  
 			Note that this is contrary to the recommendations of the author, but it gave me better results than other methods I tried.  
 			p-values close to 1.0 are not considered failures - it frequently generates those even on known good PRNGs.  
-	speed:
+### 	speed:
 		I ran tests of lengths 1 megabit, 8 megabits, 32 megabits, 128 megabits, and 1 gigabit.  When I have more time I'll add 4 gigabits as well.  
 			Note that those are in units of *bits* not bytes, unlike for other test suites.  
 		Those test lengths took about ~2 seconds, ~9 seconds, ~50 seconds, ~4 minutes, and ~45 minutes, when forced to run on a single core.  
 			4 Gb looks to take a touch under 4 hours.  
 		If I have more time I might run longer tests on some PRNGs.  
-	strengths:
+### 	strengths:
 		RaBiGeTe does not need as many bits to detect bias as most other test batteries.  
 		It performs quite decently on several categories of PRNGs.  
 			Not as wide a variety as the above test suites, but still a wide variety, and better than the above on some within that variety.  
 		Includes a GUI that lets you examine and visualize test results in a variety of ways.  
 		You can link in your PRNGs object code via dll.  
-	weaknesses:
+### 	weaknesses:
 		It's fairly slow on a per-bit-tested basis.  
 		Scripting and automation of tests with this seems pretty much impossible, given the GUI interface.  
 			In particular, you can't pipe PRNG output to it.  PRNG's must either be written as a dll, or have output saved to a file.
@@ -283,9 +283,9 @@ RaBiGeTe:
 			It sometimes maxes out all cores even when I tell it to only use 1 thread.  I've taken to locking it to a single core via CPU affinities in the task manager to avoid this.  
 			I'm not seeing the speedup I expect when it uses multiple cores.  I remember it getting more speedup from cores in an earlier version, but maybe my memory is wrong.  
 		Crashes once in a rare while.  
-	record notation:
+### 	record notation:
 	link: http://cristianopi.altervista.org/RaBiGeTe_MT/
-
+### 
 Dieharder:
 	I'm using version 3.31.1
 	configuration / usage:
@@ -295,20 +295,20 @@ Dieharder:
 			The *reason* I don't recommend this is that several tests have serious problems.  
 				And many tests show little or no ability to detect bias.  
 				And the underlying framework limits the range of parameters to tests too much.  
-			ONLY the following tests show significant ability to detect bias:
+### 			ONLY the following tests show significant ability to detect bias:
 				dab_monobit2, dab_dct, dab_filltree, dab_filltree2, diehard_opso, diehard_oqso, dab_bytdistrib
 			Tests with particular problems (at default parameters) include:
 				MAJOR p-value issues
-					these issues result in false positive results occuring at significant rates
+### 					these issues result in false positive results occuring at significant rates
 					specific tests with this issue include:
 						marsaglia_tsang_gcd, sts_serial, rgb_lagged_sum
 				minor p-value issues
 					these issues rarely result in a good PRNG producing a fail message
 					but if used with meta-tests that amplify p-value issues even a little...
-						then problems become likely
+### 						then problems become likely
 					specific tests with this issue include:
 						diehard_sums, diehard_runs, rgb_kstest
-				performance issues
+### 				performance issues
 					these tests take a long time
 					specific tests with this issue include:
 						marsaglia_tsang_gcd, diehard_dna, rgb_bitdist, rgb_minimum_distance
@@ -325,7 +325,7 @@ Dieharder:
 			Thus, the actual command lines for testing ranrot32 with DH0 look like:
 				PractRand/RNG_output ranrot32 inf 0 | dieharder -g 200 -D 504 -d dab_monobit2 -t 100000000
 				PractRand/RNG_output ranrot32 inf 0 | dieharder -g 200 -D 504 -d dab_dct -t 100000
-			To go over the full details:
+### 			To go over the full details:
 				The calls to PractRand/RNG_output is to get random bytes to test.  
 					the "ranrot32" argument is the name of the generator to use
 					the "inf" argument is the number of bytes to generate, infinite in this case.  
@@ -337,10 +337,10 @@ Dieharder:
 					the "-t 100000000" or "-t 100000" arguments specify how many bytes to test
 	speed: DH0 takes about 10 seconds, DH1 takes about a minute, DH2 takes about 5 minutes, and DHA 
 		takes about 1 hour.  
-	strengths:
+### 	strengths:
 		The command line interface is decent for scripting.  
 		The output format is fairly readable.  
-	weaknesses:
+### 	weaknesses:
 		I did mention that some tests have serious false positive issues.  
 		And others have milder p-value problems.  
 		And some lock up on some data.  
@@ -421,19 +421,19 @@ NIST STS (Statistical Test Suite)
 		one degrades as sequence length (multiplied by square root 
 		of number of sequences) increases, and by STS2 it's marginal, 
 		in STS3 and longer it's too broken to safely use.  
-	speed:
+### 	speed:
 		Slow.  However, it's difficult to talk with precision on the 
 		subject, because numerous different parties, myself included, 
 		have applied different custom optimizations to STS.  Still, 
 		I'm counting STS0 as taking 10 seconds, STS1 as taking 1 minute, 
 		STS2 as taking half an hour, and STS3 as taking	an hour.  
-	strengths:
+### 	strengths:
 		Name recognition.  This was published by NIST.  
 			National Institute of Standards and Technology
 				under the U.S. Department of Commerce.
 			and thus gets pushed hard by influential parties,
 				meaning legislators, regulators, and Pointy Haired Bosses.
-	weaknesses:
+### 	weaknesses:
 		Very small variety of biases detectable.  
 			Generally not worth testing with unless it's mandatory.  
 		Very slow performance on a per-bit-tested basis.  
@@ -455,7 +455,7 @@ NIST STS (Statistical Test Suite)
 
 
 *****************************************************************************
-2. Full results
+# 2. Full results
 *****************************************************************************
 
 
@@ -833,7 +833,8 @@ non-recommended RNGs - indirection based
 	*** 1 day                   34 (4 TB)   --         --          --
 	*** 4 days                  34 (16 TB)  --         --          34 (ten-tera)
 	others: 4? found by Dieharder-A, 2/2/7 by Dieharder-0/1/2, and none by STS0/1/2/3
-	note: I wrote a few generic indirection-based PRNGs so there's more variety here.
+> [!NOTE]
+> I wrote a few generic indirection-based PRNGs so there's more variety here.
 	They're generally pretty mediocre.  To keep quality low enough to find flaws 
 	in I mostly kept their accumulator / mixing pool down to a single word, and 
 	limited their word size to 16 bits.  To determine the size of their indirection 
@@ -848,9 +849,9 @@ non-recommended RNGs - indirection based
 
 
 *****************************************************************************
-3. Details of the results format
+# 3. Details of the results format
 *****************************************************************************
-
+### 
 columns:
 	RNG
 		The name of the RNG algorithm used;
@@ -859,12 +860,12 @@ columns:
 	PractRand standard
 		The PractRand standard tests are those returned by 
 		PractRand::Tests::Batteries::get_standard_tests().  
-		quirks:
+### 		quirks:
 			test set is (slightly) dependent upon RNG metadata
 		speed on a fast RNG on my computer (in single-threaded mode):
 			1 GB: ~15 seconds
 			1 TB: ~4 hours
-		format:
+### 		format:
 			The length of sequence required for the PractRand standard tests 
 			to detect bias.  If multiple seeds were tested, and bias was 
 			found in them at different sequence lengths, then the median 
@@ -888,19 +889,19 @@ columns:
 	TestU01 *Crush
 		This refers to the batteries "SmallCrush", "Crush", and "BigCrush" 
 		in TestU01.
-		quirks:
-			does not accept a sequence length parameter
+### 		quirks:
+### 			does not accept a sequence length parameter
 			works on RNGs outputing 31 bits per call:
 				on 32 bit RNGs it works but disregards the lowest bit?!?
 				on 8/16 bit RNGs, I concatonate multiple outputs together to produce a 32 bit output
 				on 64 bit RNGs... I am currently discarding the upper 32 bits to produce a 32 bit output
 					might, in the future, change that to returning half and buffering half for the next call
-			does not print any results until all are ready
+### 			does not print any results until all are ready
 		optimal speed on my computer:
 			SmallCrush: ~8 seconds
 			Crush:      ~30 minutes
 			BigCrush:   ~4 hours
-		format:
+### 		format:
 			If all 3 are passed then the result is recorded as "pass".  
 			If all 3 are passed, but only barely, the result is recorded as "~pass".
 			If all 3 are passed, but it is noticed that bit-reversed versions of the PRNG fail one or more, 
@@ -912,16 +913,16 @@ columns:
 			Failure is defined as a p-value <= 1.0e-10 or >= (1 - 1.0e-10)
 	RaBiGeTe extended
 		This refers to the preset testing parameters named "extended", but see the quirks section.  
-		quirks:
+### 		quirks:
 			In order to get 512 Mb samples to run on extended I had to disable the DFT test
 			I used a more recent version of RaBiGeTe that has not been publicly released at this time.  
 			I used RaBiGeTe in a slightly non-standard way, testing single long samples instead of many short samples.  
 				In my testing this method worked much better than the recommended way.  
 			It crashed several times during testing.  
-		speed on a fast RNG on my computer:
+### 		speed on a fast RNG on my computer:
 			16 Mb: just over 1 minute
 			512 Mb: a little under 40 minutes
-		format:
+### 		format:
 			The same format was used as for PractRand standard, with three exceptions.  
 			A result was considered a failure if any p-value was <= 1e-10, or if 5 or 
 			more p-values were <= 0.000001 or >= 0.999999, or if any p-values were 
@@ -940,16 +941,16 @@ columns:
 
 
 *****************************************************************************
-4. Tests that were not included
+# 4. Tests that were not included
 *****************************************************************************
-
+### 
 tests that were not included:
-	PractRand expanded standard
+### 	PractRand expanded standard
 		This test battery was not used because:
 			A. It significantly underperforms PractRand standard on fast RNGs.  
 			B. If I listed its test results here I'd have to update them 
 				every time I added a new test to it.  
-	TestU01 Rabbit
+### 	TestU01 Rabbit
 		This test battery was not used because:
 			A. It consistently crashes if used on a long sequence
 			B. Its time to complete a test does not increase linearly with 
@@ -960,7 +961,7 @@ tests that were not included:
 				length consistently enough.  
 	TestU01 Pseudo-diehard
 		This test battery was not used because its quality is too low.  
-	NIST RNG tests
+### 	NIST RNG tests
 		This test battery was not used because:
 			A. Severe difficulty with longer test runs due to not only 
 				keeping the whole sequence in memory, but also 

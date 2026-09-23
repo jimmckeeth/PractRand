@@ -1,4 +1,4 @@
-
+### 
 tmp:
 	revisit calibration of 
 	BRank scoring should consider using math_normaldist_to_suspicion() instead of treating normally distributed scores as suspicions?
@@ -53,7 +53,7 @@ post-0.94:
 	RNG testing
 		consider splitting in to a separate library
 			yes, it's already a semi-separate .lib file, but...
-			maybe it should also have separate:
+### 			maybe it should also have separate:
 				names, SourceForge project pages, VC solution files, downloads?
 		revise specific RNG testing algorithms
 *			Gap16
@@ -93,7 +93,7 @@ post-0.94:
 		add an adaptor to produce a polymorphic RNG from a raw RNG automatically?
 			(to simplify users sticking their own RNG in to the test program at full performance)
 		possibly move TestManager class in to library?
-	choices in library to be reconsidered:
+### 	choices in library to be reconsidered:
 		names of randlf, randli
 			perhaps: rand_sint32, rand_sint64, rand_uint32, rand_uint64, rand_float, rand_double, fast_uint32
 		ranges to randf, randi, randlf, randli: [min..max) or [min..max]

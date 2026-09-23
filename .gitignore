@@ -1,0 +1,8 @@
+/build/
+/libPractRand.a
+/RNG_test
+/RNG_output
+/RNG_benchmark
+/examples/pcg32
+/examples/xoshiro256starstar
+/examples/chacha20

@@ -1,0 +1,56 @@
+# RNG Entropy Pools
+
+In PractRand, "entropy pools" are conceptually a cross between pseudo-random number generators and hash functions:
+
+- A **traditional PRNG** first takes a seed as an input and then produces a stream of pseudo-random bits as an output.
+- A **traditional hash function** (like MD5) takes a variable number of bytes as input and produces a fixed number of pseudo-random bits as an output.
+
+A PractRand entropy pool combines these two roles, taking a variable amount of input and producing a variable amount of output. Furthermore, the input and output can be interleaved if desired, though that is not usually recommended and buffers may have to be flushed between the two types of operations.
+
+## Basic Usage Scenario
+
+You want to seed a particular RNG from a block of 713 bytes. Your RNG does not have a native seeding function that is appropriate for use on 713 bytes of arbitrary data. You use an entropy pool to adapt the seed to the RNG:
+
+```cpp
+// Things to operate on:
+Some_RNG_Type rng_to_be_seeded;
+char data_to_use_as_seed[713];
+
+// An entropy pooling algorithm is chosen (must be polymorphic for this purpose)
+typedef PractRand::RNGs::Polymorphic::sha2_based_pool EntropyPoolType;
+
+// That algorithm is used to pool the entropy:
+EntropyPoolType entropy_pool;
+for (int i = 0; i < 713; i++) entropy_pool.add_entropy8(data_to_use_as_seed[i]);
+entropy_pool.flush_buffers();
+
+// The pooled entropy is used to seed your RNG:
+rng_to_be_seeded->seed(&entropy_pool);
+```
+
+## Notes
+
+1. **Parameterless Initialization**: Unlike regular RNGs in PractRand, entropy pools can be initialized with no parameters—doing so puts them into a known default state. You can cause an entropy pool to revert to its default state by calling its `reset()` method.
+
+2. **Polymorphic-Only Versions**: Also unlike regular RNGs in PractRand, some entropy pools in PractRand do not have "raw" versions available, only polymorphic versions.
+
+3. **Flushing Buffers**: After adding entropy, before producing output, you should call `flush_buffers()` to make sure that the output is not buffered output that does not yet reflect the added entropy. This is not necessary if the entropy was added with the `seed` methods, as they will flush the buffers automatically.
+
+4. **Additional Methods**: Entropy pools have a few extra methods beyond what RNGs normally have:
+   ```cpp
+   void reset();
+   void flush_buffers();
+   void add_entropy8 (Uint8 );
+   void add_entropy16(Uint16);
+   void add_entropy32(Uint32);
+   void add_entropy64(Uint64);
+   void add_entropy_N(Uint8 *, size_t);
+   ```
+
+5. **Cryptographic Security**: Only cryptographically secure entropy pools should be used for seeding cryptographic RNGs.
+
+6. **Performance and Quality**: Entropy pooling RNGs are typically slower and higher quality than other RNG algorithms.
+
+7. **Included Algorithms**:
+   - **`arbee`**: Small state size and no buffering. Not cryptographically secure. The fastest entropy pool in PractRand in terms of how fast entropy can be added to it. Also fairly fast in terms of how fast it can produce output.
+   - **`sha2_based_pool`**: Uses SHA2-512 to combine its state with its input, and also uses that hash function to produce output from its state. Slow for both input and output, but it should be cryptographically secure. Unlike most RNGs, `sha2_based_pool` is currently *only* accessible by a polymorphic interface—there is no lightweight or raw version.

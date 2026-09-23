@@ -1,5 +1,5 @@
 ***********************************************************************
-1. Testing with PractRand
+# 1. Testing with PractRand
 
 1.A - Connecting your RNG to PractRand
 1.A.1 - Testing a programs output
@@ -19,20 +19,20 @@
 1.B.8 - What specific failures might mean about a PRNG
 1.B.9 - Commentary on the calibration system used internally.  
 
-2. General Discussion of RNG Testing
+# 2. General Discussion of RNG Testing
 
-3. General Information on Interpretting Test Results
+# 3. General Information on Interpretting Test Results
 3.A - Forms of test results
 3.B - False positives
 3.C - Knowing the false-positive rates is IMPORTANT
 3.D - Metatests
 
-4. Brief Reviews of Non-PractRand Test Suites
+# 4. Brief Reviews of Non-PractRand Test Suites
 ***********************************************************************
 
 
 ***********************************************************************
-1. Testing with PractRand
+# 1. Testing with PractRand
 ***********************************************************************
 
 1.A - Connecting your RNG to PractRand
@@ -46,7 +46,7 @@ to a file, or by linking the RNG to the tester.
 If you have a program that generates raw random data and sends them to 
 standard output then you can pipe them in to the PractRand RNG testing 
 tool and it can work with them.  If your program is called My_RNG then 
-the command line looks like this on linux:
+### the command line looks like this on linux:
 My_RNG | ./RNG_test stdin
 Or like this on Windows (from a command prompt):
 My_RNG | RNG_test stdin
@@ -72,7 +72,7 @@ technically PractRand doesn't support that.  But it's easily adapted
 to piped in data using standard tools on most OSes.  
 On linux, try:
 cat My_Data | ./RNG_test stdin
-On windows instead use:
+### On windows instead use:
 type My_Data | RNG_test stdin
 
 The comments that apply to testing data from a program apply here as 
@@ -104,7 +104,7 @@ The next challenge is figuring out what the results mean.
 If you are using RNG_test the simplest way to interpret test 
 results is to look for the word "FAIL" in the output.  It 
 will appear on the right-hand side and be obvious, like this.  
-Here is an example results summary with 3 such evaluations:
+### Here is an example results summary with 3 such evaluations:
 
 rng=sfc_v2_16, seed=0x7a15cb31
 length= 32 kilobytes (2^25 bytes), time= 4.7 seconds
@@ -129,7 +129,7 @@ kinds of results are considered anomolous for this purpose is very
 adjustable via command line parameters.  Adding "-a" will force all 
 results to be shown in the table regardless of how suspicious they 
 were or weren't.  
-
+### 
 The table has four columns:
 "Test Name" - a name for the subtest the line corresponds to
 "Raw" - not of much use to end users, but I use this a lot
@@ -182,7 +182,7 @@ would be about 0.1 * 6 = 0.6.
 
 1.B.5 - Notes on RNG_test p-values
 When RNG_test prints a p-value it can be in any of the 
-following forms:
+### following forms:
 * normal p-value (e.g. "p = 0.188") - exactly what you'd expect
 * p-value near zero (e.g. "p = 2.3e-4") - scientific notation in 
 a fairly standard form.  Note however that the exponent can reach 
@@ -194,7 +194,7 @@ scientific notation.  This format is a little less standard but
 still fairly self-explanatory and it allows finer resolution to 
 be displayed for numbers close to one.  Again, the exponent can 
 exceed those normally allowed in floating point numbers, up to 
-9999.  That also means that despite the low number of significant 
+# 9999.  That also means that despite the low number of significant 
 digits, the resolution of values can exceed that normally found 
 in floating point numbers near 1.  
 * p-values equal to zero (e.g. "p = 0") - values VERY close to 
@@ -216,7 +216,7 @@ RNGs (things like RNGs that produce only zeroes).  These results
 are necessary because some normal subtests results cannot be 
 calculated at all under such absurd circumstances, but the test 
 still needs some way to report those circumstances occuring.  
-
+### 
 An example results chart showing one of each category of result:
   Test Name                     Raw         Processed     Evaluation
   BRank(12):512(2)              R=  +0.4    p~= 0.4       normal
@@ -256,7 +256,7 @@ to its assymptotic form by that point.
 Do NOT assume that p-values from the same results summary have zero 
 correlation.  While the normal test set is *mostly* orthogonal it's not 
 *completely* orthogonal.  The significant intra-correlations in the core test 
-set are:
+### set are:
 * Gap-16:A is correlated with Gap-16:B and Gap-16:C.  The strength of 
 correlation is strong for shorter sequences and slowly decreases as sequence 
 length increases.  The Gap-16 results should have no significant correlation 
@@ -518,7 +518,7 @@ never encounter a false-positive from them.  If you do, it's a bug.
 
 
 ***********************************************************************
-2. General Information on Testing
+# 2. General Information on Testing
 ***********************************************************************
 
 2.A - A Brief historical overview
@@ -558,7 +558,7 @@ name / version / implementation / parameterization tried.
 
 
 ***********************************************************************
-3. General Information on Interpretting Test Results
+# 3. General Information on Interpretting Test Results
 ***********************************************************************
 
 3.A - Forms of test results
@@ -642,7 +642,7 @@ confidence that no false positive results showed up.  Which isn't quite
 good enough for typical purposes.  
 
 If you're following this then a few questions should occur to you.  Like
-these:
+### these:
 
 Q: What if my expected total number of false positive is greather than 1?  
 That would produce a negative chance by that equation, this is obviously 
@@ -669,18 +669,18 @@ errors in results that then get used as input to metatests.
 Just in case, I'll list here tests from popular batteries of tests that I have 
 observed producing false positives at dramatically higher rates than they 
 should.  
-dieharder:
+### dieharder:
 	I have p-values that dieharder considered failures when testing known good 
-	PRNGs on these tests:
+### 	PRNGs on these tests:
 		diehard_sums, diehard_runs, rgb_kstest
-	similarly I have observed abnormally high ratios of suspicious results from 
+### 	similarly I have observed abnormally high ratios of suspicious results from 
 	these tests:
 		marsaglia_tsang_gcd, diehard_dna, rgb_bitdist, rgb_minimum_distance
 	I believe that dieharder's "resolve ambiguity" mode produces false 
 	positives at significant rates on a wider variety of tests - possibly all 
 	tests.  Likewise, dieharder's "test to destruction" mode produces false 
 	positives at high rates on many or all tests, though that may be by design.  
-NIST STS:
+### NIST STS:
 	I have observed the following tests producing substantially distorted 
 	p-values at some common test lengths and settings: 
 		FFT, OverlappingTemplate, and LongestRun
@@ -766,7 +766,7 @@ positive rate of 2 per million tests.  However, a number of tests included
 in dieharder yield false positive rates that are extremely far from what 
 they're supposed to be.  Tests I have observed failiing known good PRNGs:
 	marsaglia_tsang_gcd, sts_serial, rgb_lagged_sum
-Tests I have observed producing suspicious results at abnormally high rates 
+### Tests I have observed producing suspicious results at abnormally high rates 
 on known good PRNGs:
 	diehard_sums, diehard_runs, rgb_kstest
 sts: 
@@ -926,7 +926,7 @@ directly by their basic statistical tests on the random numbers and
 displaying instead metatest results.  
 
 But why would such a thing be desirable?  Here are a few reasons, 
-and some associate drawbacks for each:
+### and some associate drawbacks for each:
 * If the original test results p-values have biases with known 
 properties, this can be an effective way to remove their biases.  
 - However this can amplify errors if done incorrectly, and is 
@@ -955,9 +955,9 @@ of PractRand subtests though.)
 
 
 ***********************************************************************
-4. Brief Reviews of Non-PractRand Test Suites
+# 4. Brief Reviews of Non-PractRand Test Suites
 ***********************************************************************
-
+### 
 gjrand:
 	Very good.  Comparable to PractRand.  
 	I've only used it on linux, I suspect a windows build would be difficult.  
@@ -965,7 +965,7 @@ gjrand:
 	DO NOT RUN MULTIPLE TESTS AT ONCE.  It will silently fail, producing incorrect results.  
 
 	I pipe my data in to it.  I think that's the way it's intended to be used.  
-
+### 
 TestU01:
 	Decent, but not as good as PractRand or gjrand in my experience.  
 	Difficult to build on windows.  
@@ -973,7 +973,7 @@ TestU01:
 	I recommend its SmallCrush, Crush, and BigCrush batteries of tests.  
 
 	I wrote an interface that links it and accepts piped in data.
-
+### 
 RaBiGeTe:
 	Windows only, recent versions are closed-source.  
 	Does not need many bits - a big bonus on slow PRNGs.  
@@ -982,7 +982,7 @@ RaBiGeTe:
 
 	I compile my PRNGs in to .dll files for it, but you can also give 
 	it files.  
-
+### 
 Dieharder:
 	Not good, but parts of it show potential.  
 	*nix-only.  
@@ -993,13 +993,13 @@ Dieharder:
 	Beware of false positives.  
 
 	I pipe in my PRNG output.  You *can* link with Dieharder but IIRC it has a viral license so maybe don't do that.  
-
+### 
 NIST STS:
 	Don't bother.  It has multiple critical problems and no significant strengths.  
 	Except it's use is legally mandated for some industries.  
 
 	I wrote a customized version that accepts piped in data.  
-
+### 
 Diehard:
 	Don't bother.  It's of historic value only, very badly outdated.  
 
